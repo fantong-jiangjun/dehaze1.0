@@ -1,8 +1,23 @@
-# dehaze 暗通道去雾
-Realizing Kaiming He's paper 'Single Image Haze Removal Using Dark Channel Prior'
+# dehaze 暗通道去雾原理
+-在大多数非天空区域，至少有一个通道的像素值是很低的并且接近于0，并且在一个小的区域内最小的像素强度也接近于0.
 
-- 雾霾天一定是白天，天色灰蒙蒙的。因此在计算大气光时，我假设最亮部分是灰白色，那RGB应该都很接近255，so没必要分开算R/G/B，具体见代码
-- When I calculate the A(atmosphere), I simply suppose the brightest spot is approximately white(gray). So the RGB value of that point should be almost same
-- 使用导向滤波精确透光率
-- Using the guided filter now.
+-低强度的像素值通常由于以下几个方面造成：首先是现实世界中物体的阴影，因为阴影本身具有较低的光强度。其次是色彩鲜艳的物体或表面，它们在 RGB 通道中的某些通道上具有较低的值，因此在图像中呈现较暗的颜色，比如灰暗色的树干和石头等。总的来说，自然景物中到处都存在阴影或色彩丰富的物体，这些因素都会导致图像的暗通道具有较低的像素值，呈现出灰暗的色调。
 
+-暗通道先验去雾算法（Dark Channel Prior, DCP）是一种基于图像的去雾技术，由Kaiming He等人在2009年提出。这种算法利用了大气散射模型，通过估计大气光和图像的传输图来去除雾的影响。以下是暗通道先验去雾算法的基本步骤：
+
+对于一幅图像，首先提取其暗通道。暗通道是指图像中相对较暗的区域，这些区域在雾的影响下仍然保持一定的可见度。
+暗通道可以通过对图像的每个像素点的RGB三个通道进行最小值操作来获得。
+大气光估计：
+
+利用暗通道，估计大气光的值。大气光是指由于大气散射而进入相机的光。
+可以通过对暗通道的像素值进行阈值处理来估计大气光的值。例如，可以选择暗通道中大于某个阈值的像素点的像素值作为大气光的估计值。
+传输图估计：
+
+传输图是指图像中每个像素点的光透过雾的传输率。传输图的估计需要结合大气光和暗通道。
+
+-参考来源https://blog.csdn.net/qq_53545309/article/details/140772866
+
+-命令行加入
+cd E:\e_work\git\quwu\dehaze
+python dehaze.py -i .\image\图片 -o .\output.png
+点击图片再按任意键即可保存
